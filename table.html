@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Фильтрация таблицы</title>
+    <link rel="stylesheet" href="CSS/style.css">
+    <script src="JavaScript/data.js"></script>
+    <script src="JavaScript/filter.js"></script>
+    <script src="JavaScript/table.js"></script>
+    <script src="JavaScript/main.js"></script>
+    <script src="JavaScript/sort.js"></script>
+</head>
+<body>
+    <p><a href="index.html" target="_blank">Лучшие фильмы</a></p>
+    <p><a href="table.html">Список лучших фильмов</a></p>
+    <hr>
+
+    <details>
+        <summary>График</summary>
+        <form>
+            <p>
+                Значение по оси ОХ:<br>
+                <input type="radio" name="data" value="w"> Дата выхода <br>
+                <input type="radio" name="data" value="m"> Жанр <br>
+                <input type="radio" name="data" value="m"> Страна
+            </p>
+        </form>
+        <form>
+            <p>
+                Результат:<br>
+                <input type="radio" name="gender" value="w"> Количество фильмов <br>
+                <input type="radio" name="gender" value="w"> Минимальный год <br>
+                <input type="radio" name="gender" value="w"> Максимальный год <br>
+            </p>
+        </form>
+        <form>
+            <input type="button" value="Построить">
+        </form>
+        <p>Здесь будет график</p>
+    </details>
+
+    <details>
+        <summary>Фильтрация</summary>
+        <form id="filter">
+            <p>
+                <label for="structure">Название:</label>
+                <input type="text" id="structure">
+            </p>
+            <p>
+                <label for="category">Жанр:</label>
+                <input type="text" id="category">
+            </p>
+            <p>
+                <label for="yearFrom">Дата выхода: </label>
+                от <input type="number" id="yearFrom">
+                до <input type="number" id="yearTo">
+            </p>
+            <p>
+                <label for="country">Страна:</label>
+                <input type="text" id="country">
+            </p>
+            <input type="button" id="findButton" value="Найти">
+            <input type="button" value="Очистить фильтры">
+        </form>
+    </details>
+
+
+    <details>
+        <summary>Сортировка</summary>
+        <form id="sort">
+            <p> Сортировать по</p>
+            <p>
+                <select id="fieldsFirst">
+                </select>
+                по убыванию? <input type="checkbox" id="fieldsFirstDesc">
+            </p>
+            <p>
+                <select id="fieldsSecond">
+                </select>
+                по убыванию? <input type="checkbox" id="fieldsSecondDesc">
+            </p>
+            <p>
+                <select id="fieldsSecond">
+                </select>
+                по убыванию? <input type="checkbox" id="fieldsSecondDesc">
+            </p>
+            <input type="button" value="Сортировать">
+            <input type="button" value="Сбросить сортировку">
+        </form>
+    </details>
+
+    <table id="list">
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+﻿.search {
+    text-align: right;
+    background: grey;
+}
+
+.search-text-area {
+    display: inline;
+    width: 700px;
+    height: 22px;
+    margin: 5px;
+}
+
+.lens {
+    background: grey;
+    border: none;
+    font-size: 18px;
+}
+
+.header {
+    display: grid;
+    background: LightGrey;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-areas:
+        "name . link1 link2 link3 . .";
+}
+
+.header > div {
+    font-size: 23px;
+    padding: 10px 5px;
+    margin: 8px;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.header a {
+    text-decoration: none;
+    color: black;
+}
+
+.title {
+    grid-area: name;
+}
+
+.header > .header-link1 {
+    grid-area: link1;
+    background: grey;
+}
+
+.header > .header-link2 {
+    grid-area: link2;
+}
+
+.header > .header-link3 {
+    grid-area: link3;
+}
+
+.gallery {
+    display: grid;
+    width: 40%;
+    margin: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.gallery div {
+    text-align: center;
+}
+
+.img1 {
+    grid-column: 1;
+    grid-row: 1/4;
+}
+
+.content1 {
+    text-align: center;
+    border: solid 1px grey;
+    margin: 15px auto;
+    font-size: 20px;
+    width: 90%;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
+.content2 {
+    text-align: center;
+    border: solid 1px grey;
+    margin: 15px auto;
+    font-size: 20px;
+    width: 90%;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.content3 {
+    text-align: center;
+    border: solid 1px grey;
+    margin: 15px auto;
+    font-size: 20px;
+    width: 90%;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.movie-name {
+    font-weight: bold;
+}
+
+.bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: grey;
+    justify-content: space-between;
+}
+
+.bottom div {
+    padding: 5px;
+}
+
+.bottom-mail {
+    text-align: right;
+}
+
+@media all and (max-width: 600px) {
+    .search-text-area {
+        display: inline;
+        width: 150px;
+        height: 22px;
+        margin: 5px;
+    }
+    .header {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .header > div {
+        width: 45%;
+        font-size: 23px;
+        padding: 10px 5px;
+        margin: 8px auto;
+        text-align: center;
+        white-space: nowrap;
+    }
+    .gallery {
+        display: flex;
+        width: 40%;
+        flex-wrap: wrap;
+        text-align: center;
+    }
+    .gallery img {
+        height: 250px;
+        
+        
+    }
+}
