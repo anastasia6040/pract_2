@@ -91,7 +91,7 @@ let filterTable = (data, idTable, dataForm) => {
 
         return result; // Возвращаем результат фильтрации
     });
-
+    currentData = [...tableFilter];
     // Очищаем таблицу перед отображением новых данных
     clearTable(idTable);
 
@@ -101,9 +101,10 @@ let filterTable = (data, idTable, dataForm) => {
 
 // Функция для очистки фильтров и вывода исходных данных
 let clearFilter = (idTable, data, form) => {
-    // Очищаем все поля формы
     form.reset();
 
-    // Выводим таблицу с исходными данными
-    createTable(data, idTable);
+    currentData = [...films];
+
+    clearTable(idTable);
+    createTable(currentData, idTable);
 };

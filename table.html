@@ -4,11 +4,13 @@
     <meta charset="utf-8">
     <title>Фильтрация таблицы</title>
     <link rel="stylesheet" href="CSS/style.css">
+    <script src="http://d3js.org/d3.v7.min.js"></script>
     <script src="JavaScript/data.js"></script>
     <script src="JavaScript/filter.js"></script>
     <script src="JavaScript/table.js"></script>
     <script src="JavaScript/main.js"></script>
     <script src="JavaScript/sort.js"></script>
+    <script src="JavaScript/chart.js"></script>
 </head>
 <body>
     <p><a href="index.html" target="_blank">Лучшие фильмы</a></p>
@@ -17,26 +19,29 @@
 
     <details>
         <summary>График</summary>
-        <form>
-            <p>
-                Значение по оси ОХ:<br>
-                <input type="radio" name="data" value="w"> Дата выхода <br>
-                <input type="radio" name="data" value="m"> Жанр <br>
-                <input type="radio" name="data" value="m"> Страна
-            </p>
+        <form id="graphSettings">
+            <div>
+                <label>Ось OX:</label>
+                <label><input type="radio" name="xAxis" value="Страна" checked> Страна</label>
+                <label><input type="radio" name="xAxis" value="Жанр"> Жанр</label>
+            </div>
+            <div>
+                <label>Ось OY:</label>
+                <label><input type="checkbox" id="showMin" value="min"> Минимальная дата выхода</label>
+                <label><input type="checkbox" id="showMax" value="max" checked> Максимальная дата выхода</label>
+            </div>
+            <br>
+            <div>
+                <label>Тип диаграммы:</label>
+                <select id="chartType">
+                    <option value="scatter">Точечная</option>
+                    <option value="bar">Гистограмма</option>
+                </select>
+            </div>
+            <br>
+            <button type="button" id="plotGraph">Построить график</button>
         </form>
-        <form>
-            <p>
-                Результат:<br>
-                <input type="radio" name="gender" value="w"> Количество фильмов <br>
-                <input type="radio" name="gender" value="w"> Минимальный год <br>
-                <input type="radio" name="gender" value="w"> Максимальный год <br>
-            </p>
-        </form>
-        <form>
-            <input type="button" value="Построить">
-        </form>
-        <p>Здесь будет график</p>
+        <svg width="800" height="500"></svg>
     </details>
 
     <details>
@@ -80,7 +85,7 @@
                 по убыванию? <input type="checkbox" id="fieldsSecondDesc">
             </p>
             <p>
-                <select id="fieldsSecond">
+                <select id="fieldsThird">
                 </select>
                 по убыванию? <input type="checkbox" id="fieldsSecondDesc">
             </p>

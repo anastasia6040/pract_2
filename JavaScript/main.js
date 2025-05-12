@@ -1,5 +1,64 @@
 document.addEventListener("DOMContentLoaded", function () {
+    
     createTable(films, 'list');
+
+    // По умолчанию показываем максимальные значения по странам (как в оригинале)
+    drawGraph(currentData, "Страна", false, true, "scatter");
+
+
+    const plotBtn = document.getElementById('plotGraph');
+    if (plotBtn) {
+        plotBtn.addEventListener('click', function () {
+            const xAxis = document.querySelector('input[name="xAxis"]:checked').value;
+            const showMin = document.getElementById('showMin').checked;
+            const showMax = document.getElementById('showMax').checked;
+            const chartType = document.getElementById('chartType').value;
+
+            // Находим именно текст чекбоксов (span или текст внутри label)
+            const minText = document.querySelector('#showMin').parentElement;
+            const maxText = document.querySelector('#showMax').parentElement;
+
+
+            // Сбрасываем стили ошибок
+            resetErrorStyles(minText, maxText);
+
+
+            if (!showMin && !showMax) {
+                // Подсвечиваем label красным
+                minText.classList.add('error-label');
+                maxText.classList.add('error-label');
+                return;
+            }
+
+            drawGraph(currentData, xAxis, showMin, showMax, chartType);
+        });
+    }
+
+    // Функция для сброса стилей ошибок
+    function resetErrorStyles(...labels) {
+        labels.forEach(label => {
+            if (label) {
+                label.classList.remove('error-label');
+            }
+        });
+    }
+
+    // Добавляем обработчики для сброса ошибки при выборе
+    document.getElementById('showMin').addEventListener('change', function () {
+        resetErrorStyles(
+            document.querySelector('label[for="showMin"]'),
+            document.querySelector('label[for="showMax"]')
+        );
+    });
+
+    document.getElementById('showMax').addEventListener('change', function () {
+        resetErrorStyles(
+            document.querySelector('label[for="showMin"]'),
+            document.querySelector('label[for="showMax"]')
+        );
+    });
+
+    //////////////////
 
     // Добавляем обработчик для кнопки "Найти"
     document.getElementById("findButton").addEventListener("click", function () {
@@ -24,6 +83,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("fieldsFirst").addEventListener("change", function () {
         changeNextSelect("fieldsSecond", this);
     });
+
+    document.getElementById("fieldsSecond").addEventListener("change", function () {
+        changeNextSelect("fieldsThird", this);
+    });
+
 
     document.querySelector("input[value='Сортировать']").addEventListener("click", function () {
         sortTable("list", document.getElementById("sort"));
@@ -81,18 +145,17 @@ let setSortSelects = (data, dataForm) => {
 
 // настраиваем поле для следующего уровня сортировки
 let changeNextSelect = (nextSelectId, curSelect) => {
-
     let nextSelect = document.getElementById(nextSelectId);
 
     nextSelect.disabled = false;
+    nextSelect.innerHTML = curSelect.innerHTML; // Копируем все опции
 
-    // в следующем SELECT выводим те же option, что и в текущем
-    nextSelect.innerHTML = curSelect.innerHTML;
-
-    // удаляем в следующем SELECT уже выбранную в текущем опцию
-    // если это не первая опция - отсутствие сортировки
-    if (curSelect.value != 0) {
-        nextSelect.remove(curSelect.value);
+    // Удаляем в следующем SELECT уже выбранную в текущем опцию (если она не "Нет")
+    if (curSelect.value != "0") {
+        let selectedOption = nextSelect.querySelector(`option[value="${curSelect.value}"]`);
+        if (selectedOption) {
+            selectedOption.remove();
+        }
     } else {
         nextSelect.disabled = true;
     }

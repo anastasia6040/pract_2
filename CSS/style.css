@@ -28,3 +28,22 @@ caption {
     margin: 10px 0;
     font-weight: bold;
 }
+
+svg {
+    width: 800px;
+    height: 400px;
+}
+
+    svg path, line {
+        fill: none;
+        stroke: black;
+        width: 1px;
+    }
+
+    svg text {
+        font: 8px Verdana;
+    }
+
+.error-label {
+    color: red;
+}

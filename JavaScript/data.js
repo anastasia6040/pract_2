@@ -300,3 +300,5 @@ const films = [
         "Страна": "Америка"
     }
 ];
+
+let currentData = [...films];
