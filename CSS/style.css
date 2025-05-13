@@ -47,3 +47,11 @@ svg {
 .error-label {
     color: red;
 }
+
+.line-min {
+    stroke: blue;
+}
+
+.line-max {
+    stroke: red;
+}

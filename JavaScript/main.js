@@ -1,8 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
     createTable(films, 'list');
-
-    // По умолчанию показываем максимальные значения по странам (как в оригинале)
     drawGraph(currentData, "Страна", false, true, "scatter");
 
 

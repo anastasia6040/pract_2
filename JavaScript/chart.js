@@ -1,36 +1,39 @@
-﻿function createArrGraph(data, key, showMin, showMax) {
+﻿// Создание массива данных для графика на основе группировки по ключу
+function createArrGraph(data, key, showMin, showMax) {
+    // Группируем данные по значению key
     groupObj = d3.group(data, d => d[key]);
     let arrGraph = [];
 
+    // Проходим по каждой группе
     for (let entry of groupObj) {
-        let dates = entry[1].map(d => d['Дата выхода']);  // Изменено: 'Высота' → 'Дата выхода'
-        let minMax = d3.extent(dates);
+        let dates = entry[1].map(d => d['Дата выхода']);
+        let minMax = d3.extent(dates); // Находим минимальную и максимальную дату
         let values = [];
 
-        if (showMin) values.push(minMax[0]);
-        if (showMax) values.push(minMax[1]);
+        if (showMin) values.push(minMax[0]); // Добавляем минимальное значение
+        if (showMax) values.push(minMax[1]); // Добавляем максимальное значение
 
-        // Убрана сортировка по году, так как теперь работаем со страной/жанром
-        let label = entry[0];  // Убрано условие для "Год"
+        let label = entry[0];
 
         arrGraph.push({
             labelX: label,
             values: values,
-            originalLabel: entry[0]
+            originalLabel: entry[0] // Сохраняем исходную метку для оси X
         });
     }
 
-    // Убрана сортировка по году
     return arrGraph;
 }
 
-// Функция drawGraph не требует изменений, остается как есть
+// Главная функция для отрисовки графика
 function drawGraph(data, keyX, showMin, showMax, chartType = "scatter") {
+    // Подготовка данных для графика
     const arrGraph = createArrGraph(data, keyX, showMin, showMax);
 
     let svg = d3.select("svg");
-    svg.selectAll('*').remove();
+    svg.selectAll('*').remove(); // Очищаем SVG перед отрисовкой
 
+    // Параметры области графика
     attr_area = {
         width: parseFloat(svg.style('width')),
         height: parseFloat(svg.style('height')),
@@ -38,29 +41,38 @@ function drawGraph(data, keyX, showMin, showMax, chartType = "scatter") {
         marginY: 50
     }
 
+    // Создаем оси и шкалы
     const [scX, scY] = createAxis(svg, arrGraph, attr_area, keyX);
 
+    // Вызов соответствующей функции отрисовки
     if (chartType === "scatter") {
         createChart(svg, arrGraph, scX, scY, attr_area, null, showMin, showMax);
     } else if (chartType === "bar") {
         createBarChart(svg, arrGraph, scX, scY, attr_area, null, showMin, showMax);
+    } else if (chartType === "line") {
+        createLineChart(svg, arrGraph, scX, scY, attr_area, showMin, showMax);
     }
 }
 
-// Функция createAxis не требует изменений, остается как есть
+
+// Создание шкал и осей
 function createAxis(svg, data, attr_area, keyX) {
+    // Все значения Y (даты) объединяем в один массив
     const allValues = data.flatMap(d => d.values);
     const [min, max] = d3.extent(allValues);
 
+    // Дискретная шкала по X (категории)
     let scaleX = d3.scaleBand()
         .domain(data.map(d => d.originalLabel))
         .range([0, attr_area.width - 2 * attr_area.marginX])
         .padding(0.1);
 
+    // Непрерывная шкала по Y (даты)
     let scaleY = d3.scaleLinear()
         .domain([min, max])
         .range([attr_area.height - 2 * attr_area.marginY, 0]);
 
+    // Создание и добавление осей
     let axisX = d3.axisBottom(scaleX);
     let axisY = d3.axisLeft(scaleY);
 
@@ -80,7 +92,7 @@ function createAxis(svg, data, attr_area, keyX) {
     return [scaleX, scaleY];
 }
 
-// Функции createChart и createBarChart не требуют изменений, остаются как есть
+// Создание точечного графика (scatter)
 function createChart(svg, data, scaleX, scaleY, attr_area, color, showMin, showMax) {
     const r = 4;
     const colors = {
@@ -115,6 +127,7 @@ function createChart(svg, data, scaleX, scaleY, attr_area, color, showMin, showM
     }
 }
 
+// Создание столбчатого графика (bar)
 function createBarChart(svg, data, scaleX, scaleY, attr_area, color, showMin, showMax) {
     const barWidth = scaleX.bandwidth() / (showMin && showMax ? 2 : 1);
     const colors = {
@@ -148,5 +161,43 @@ function createBarChart(svg, data, scaleX, scaleY, attr_area, color, showMin, sh
             .attr("height", d => attr_area.height - attr_area.marginY * 2 - scaleY(d.values[showMin ? 1 : 0]))
             .attr("transform", `translate(${attr_area.marginX}, ${attr_area.marginY})`)
             .style("fill", colors.max);
+    }
+}
+
+// Создание линейного графика (line) с точками
+function createLineChart(svg, data, scaleX, scaleY, attr_area, showMin, showMax) {
+    const colors = {
+        min: "blue",
+        max: "red"
+    };
+
+    if (showMin) {
+        const dataMin = data.filter(d => d.values.length > 0);
+
+        svg.append("path")
+            .datum(dataMin)
+            .attr("class", "line-min")
+            .attr("fill", "none")
+            .attr("stroke", colors.min)
+            .attr("stroke-width", 2)
+            .attr("d", d3.line()
+                .x(d => scaleX(d.originalLabel) + scaleX.bandwidth() / 2 + attr_area.marginX)
+                .y(d => scaleY(d.values[0]) + attr_area.marginY)
+            );
+    }
+
+    if (showMax) {
+        const dataMax = data.filter(d => d.values.length > (showMin ? 1 : 0));
+
+        svg.append("path")
+            .datum(dataMax)
+            .attr("class", "line-max")
+            .attr("fill", "none")
+            .attr("stroke", colors.max)
+            .attr("stroke-width", 2)
+            .attr("d", d3.line()
+                .x(d => scaleX(d.originalLabel) + scaleX.bandwidth() / 2 + attr_area.marginX)
+                .y(d => scaleY(d.values[showMin ? 1 : 0]) + attr_area.marginY)
+            );
     }
 }
